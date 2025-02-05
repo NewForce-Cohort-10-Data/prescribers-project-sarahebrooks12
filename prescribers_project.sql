@@ -85,6 +85,15 @@ using (specialty_description)
 group by opioid_claims, specialty_description
 order by round DESC;
 
+-- Chris
+SELECT 
+specialty_description,
+ROUND(SUM(CASE WHEN opioid_drug_flag = 'Y' THEN total_claim_count END)/ SUM(total_claim_count) * 100 ,2) AS percent_opioid_claims
+FROM prescriber
+INNER JOIN prescription USING(npi)
+INNER JOIN drug USING(drug_name)	
+GROUP BY specialty_description
+ORDER BY percent_opioid_claims  DESC NULLS LAST;
 
 -- a. Which drug (generic_name) had the highest total drug cost?
 Select d.generic_name, total_drug_cost::numeric as drug_cost
